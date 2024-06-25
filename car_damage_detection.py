@@ -9,8 +9,8 @@ import pandas as pd
 from pdf_generator import generate_pdf
 
 def car_damage_detection_page():
-    st.header("Car Damage Detection")
-
+    # st.header("Car Damage Detection")
+    st.subheader("Verify car authenticity by entering the car registration number.")
     if 'file_path' not in st.session_state:
         st.session_state.file_path = None
     if 'prediction_json' not in st.session_state:
@@ -18,9 +18,9 @@ def car_damage_detection_page():
     if 'car_data_found' not in st.session_state:
         st.session_state.car_data_found = False
 
-    car_number = st.text_area("Enter Car Registration No.", height=150, key="car_number")
+    car_number = st.text_area("", height=10, key="car_number")
 
-    if st.button("Fetch Car Data"):
+    if st.button("Fetch Car Details"):
         if car_number:
             with st.spinner("Fetching car data..."):
                 car_data = fetch_car_data(car_number)
