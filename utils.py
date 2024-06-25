@@ -1,6 +1,5 @@
 import firebase_admin
-from firebase_admin import credentials
-from firebase_admin import firestore
+from firebase_admin import credentials, firestore
 
 # Initialize Firebase Admin SDK (only once in your application)
 if not firebase_admin._apps:
@@ -14,12 +13,20 @@ def fetch_car_data(car_number):
     query = collection_ref.where('Registration', '==', car_number).limit(1)
     results = query.stream()
 
-    # Check if there are any matching documents
     for doc in results:
-        return doc.to_dict()  # Return the dictionary representation of the document
+        return doc.to_dict()
 
-    return None  # Return None if no document found
+    return None
 
+def fetch_all_car_data():
+    collection_ref = db.collection("cardata")
+    docs = collection_ref.stream()
+    car_data = [doc.to_dict() for doc in docs]
+    return car_data
+
+def add_car_data(car_data):
+    doc_ref = db.collection('cardata').document()
+    doc_ref.set(car_data)
 
 
 
