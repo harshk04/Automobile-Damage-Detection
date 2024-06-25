@@ -1,0 +1,9 @@
+streamlit==1.36.0
+streamlit-option-menu==0.3.13
+pillow==10.3.0
+roboflow==1.1.33
+pandas==2.2.2
+reportlab==4.2.2
+firebase-admin==6.5.0
+pypi-json==0.4.0
+io==0.0.1
