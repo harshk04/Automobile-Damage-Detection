@@ -31,7 +31,7 @@ else:
 
     # Home Page
     if page == "Home":
-        st.image( 'banner.png')
+        st.image( 'banner.jpg')
         st.markdown("***")
         st.markdown("<h2 style='text-align: center;'>Project Information</h2>", unsafe_allow_html=True)
         # st.header("Project Information")
