@@ -32,7 +32,7 @@ Welcome to the Automobile Damage Detection App! This application allows users to
 1. Clone the repository:
 
     ```sh
-    git clone https://github.com/your-username/automobile-damage-detection.git
+    git clone https://github.com/harshk04/Automobile-Damage-Detection
     cd automobile-damage-detection
     ```
 
