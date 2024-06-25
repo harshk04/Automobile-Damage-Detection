@@ -67,6 +67,13 @@ Welcome to the Automobile Damage Detection App! This application allows users to
 - Use the **Get Car Data** page to fetch and display all car data in the database.
 - Go to the **Add New Car Data** page to input and save new car details.
 
+## Admin Login Details
+
+To access the admin portal, use the following login credentials:
+
+- **Username**: `admin`
+- **Password**: `password`
+
 ## File Structure
 
 - `app.py`: Main application file for the user portal.
