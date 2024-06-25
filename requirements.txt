@@ -6,4 +6,3 @@ pandas==2.2.2
 reportlab==4.2.2
 firebase-admin==6.5.0
 pypi-json==0.4.0
-io==0.0.1
