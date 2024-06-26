@@ -5,6 +5,10 @@ Welcome to the Automobile Damage Detection App! This application allows users to
 ## 📌 Sneak Peek of Main Page 🙈 :
 
 
+https://github.com/harshk04/Automobile-Damage-Detection/assets/115946158/993d58c7-3a59-4d1a-9e3d-0fc5f85c9e93
+
+
+
 
 ## Table of Contents
 
