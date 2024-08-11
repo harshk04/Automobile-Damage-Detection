@@ -60,8 +60,8 @@ def car_damage_detection_page():
             project = rf.workspace("automobile-damage-detection").project("automobile-damage-detection")
             model = project.version(1).model
 
-            confidence_threshold = 40
-            overlap_threshold = 30
+            confidence_threshold = 20
+            overlap_threshold = 20
 
             with st.spinner("Detecting damage..."):
                 prediction = model.predict(file_path, confidence=confidence_threshold, overlap=overlap_threshold)
