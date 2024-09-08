@@ -32,42 +32,41 @@ def add_car_data(car_data):
 
 
 
-
-
 def calculate_damage_estimation(prediction_json):
     class_mapping = {
-        0: "bonnet dent",
-        1: "boot dent",
-        2: "doorouter dent",
-        3: "fender dent",
-        4: "front bumper dent",
-        5: "Front windscreen damage",
-        6: "Headlight Damage",
-        7: "quaterpanel dent",
-        8: "rear bumper dent",
-        9: "Rear windscreen Damage",
-        10: "roof dent",
-        11: "Runningboard Damage",
-        12: "Sidemirror Damage",
-        13: "Taillight Damage"
+        0: "Bonnet Dent/Damage",
+        1: "Boot Dent/Damage",
+        2: "Door Outer Panel Dent",
+        3: "Fender Dent/Damage",
+        4: "Front Bumper Damage",
+        5: "Front Windshield Damage",
+        6: "Headlight Assembly Damage",
+        7: "Quarter Panel Dent/Damage",
+        8: "Rear Bumper Damage",
+        9: "Rear Windshield Damage",
+        10: "Roof Dent/Damage",
+        11: "Running Board Damage",
+        12: "Side Mirror Damage",
+        13: "Taillight Assembly Damage"
     }
 
     price_mapping = {
-        "bonnet dent": 4000,
-        "boot dent": 3500,
-        "doorouter dent": 4500,
-        "fender dent": 5000,
-        "front bumper dent": 6000,
-        "Front windscreen damage": 7000,
-        "Headlight Damage": 3000,
-        "quaterpanel dent": 5500,
-        "rear bumper dent": 6500,
-        "Rear windscreen Damage": 7500,
-        "roof dent": 4000,
-        "Runningboard Damage": 5000,
-        "Sidemirror Damage": 2000,
-        "Taillight Damage": 2500
+        "Bonnet Dent/Damage": 5500,
+        "Boot Dent/Damage": 6000,
+        "Door Outer Panel Dent": 4500,
+        "Fender Dent/Damage": 5000,
+        "Front Bumper Damage": 6000,
+        "Front Windshield Damage": 5000,
+        "Headlight Assembly Damage": 6000,
+        "Quarter Panel Dent/Damage": 5500,
+        "Rear Bumper Damage": 4500,
+        "Rear Windshield Damage": 4000,
+        "Roof Dent/Damage": 3500,
+        "Running Board Damage": 4000,
+        "Side Mirror Damage": 4000,
+        "Taillight Assembly Damage": 5000
     }
+
 
     predictions = prediction_json['predictions']
     total_price = 0
