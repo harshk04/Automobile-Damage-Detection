@@ -33,12 +33,30 @@ def car_damage_detection_page():
                     st.session_state.car_data_found = True
                     st.session_state.car_details = car_data  # Save car details for later use
 
+    
     if st.session_state.car_data_found:
         st.write("Car Data:")
 
-        # Convert car_data dictionary to a pandas DataFrame for tabular display
-        car_data_df = pd.DataFrame([st.session_state.car_details])
+        # Reorder the columns for display
+        columns_order = ['Registration', 'Car Brand', 'Model',  'Colour', 'Type', 'Fuel', 'Year of Manufacture','Car Price']  # specify the order you want
+        car_data_df = pd.DataFrame([st.session_state.car_details])[columns_order]
+
+        car_data_df.rename(columns={'Registration': 'Registration No.'}, inplace=True)
+        car_data_df.rename(columns={'Car Brand': 'Brand'}, inplace=True)
+        car_data_df.rename(columns={'Colour': 'Body Color'}, inplace=True)
+        car_data_df.rename(columns={'Type': 'Body Style'}, inplace=True)
+        car_data_df.rename(columns={'Fuel': 'Fuel Type'}, inplace=True)
+        car_data_df.rename(columns={'Year of Manufacture': 'Registration Year'}, inplace=True)
+        car_data_df.rename(columns={'Car Price': 'Reselling Value (in INR)'}, inplace=True)
+        
         st.table(car_data_df)
+        
+    # if st.session_state.car_data_found:
+    #     st.write("Car Data:")
+
+    #     # Convert car_data dictionary to a pandas DataFrame for tabular display
+    #     car_data_df = pd.DataFrame([st.session_state.car_details])
+    #     st.table(car_data_df)
 
         st.markdown("***")
         st.warning("Upload an image of the car to detect damages and estimate repair costs.")
