@@ -27,7 +27,7 @@ def generate_pdf(car_details, prediction_json, total_price, price_details, image
     elements.append(car_info_title)
 
     car_info_data = [
-        ['Registrotion No.', car_details['Registration']],
+        ['Registration No.', car_details['Registration']],
         ['Brand', car_details['Car Brand']],
         ['Model', car_details['Model']],
         ['Body Color', car_details['Colour']],
