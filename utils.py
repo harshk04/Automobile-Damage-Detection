@@ -1,7 +1,6 @@
 import firebase_admin
 from firebase_admin import credentials, firestore
 
-# Initialize Firebase Admin SDK (only once in your application)
 if not firebase_admin._apps:
     cred = credentials.Certificate(r"automobile-damage-detection-firebase-adminsdk-k160e-9e5d21ccf0.json")
     firebase_admin.initialize_app(cred)
@@ -28,11 +27,32 @@ def add_car_data(car_data):
     doc_ref = db.collection('cardata').document()
     doc_ref.set(car_data)
 
+def fetch_car_brand_prices(brand):
+    """Fetches price mappings for car parts based on the car's brand from Firestore."""
+    collection_ref = db.collection('damage_prices')  # Updated collection name from 'car_brand_prices' to 'damage_prices'
+
+    if not isinstance(brand, str):
+        raise TypeError(f"Expected 'brand' to be a string, but got {type(brand)}")
+    
+    brand = brand.strip()  # Strip whitespace just in case
+    
+    print(f"Fetching prices for brand: {brand}")  # Debugging line
+    
+    doc_ref = collection_ref.document(brand)
+    doc = doc_ref.get()
+
+    if doc.exists:
+        return doc.to_dict().get('damage_prices', {})  # Ensure we're fetching 'damage_prices'
+    else:
+        raise ValueError(f"No price data found for brand: {brand}")
 
 
-
-
-def calculate_damage_estimation(prediction_json):
+def calculate_damage_estimation(prediction_json, price_mapping):
+    """
+    Calculates the total damage cost based on the prediction JSON and price mapping.
+    The prediction_json contains parts and their damage level, while price_mapping contains
+    part names and their associated prices.
+    """
     class_mapping = {
         0: "Bonnet Dent/Damage",
         1: "Boot Dent/Damage",
@@ -50,31 +70,14 @@ def calculate_damage_estimation(prediction_json):
         13: "Taillight Assembly Damage"
     }
 
-    price_mapping = {
-        "Bonnet Dent/Damage": 5500,
-        "Boot Dent/Damage": 6000,
-        "Door Outer Panel Dent": 4500,
-        "Fender Dent/Damage": 5000,
-        "Front Bumper Damage": 6000,
-        "Front Windshield Damage": 5000,
-        "Headlight Assembly Damage": 6000,
-        "Quarter Panel Dent/Damage": 5500,
-        "Rear Bumper Damage": 4500,
-        "Rear Windshield Damage": 4000,
-        "Roof Dent/Damage": 3500,
-        "Running Board Damage": 4000,
-        "Side Mirror Damage": 4000,
-        "Taillight Assembly Damage": 5000
-    }
-
-
-    predictions = prediction_json['predictions']
     total_price = 0
     price_details = []
 
+    predictions = prediction_json['predictions']
+
     for pred in predictions:
         confidence = round(pred['confidence'], 3)
-        class_id = int(pred['class'])  # Convert class to integer
+        class_id = int(pred['class'])
         class_name = class_mapping.get(class_id, "Unknown")
         price = price_mapping.get(class_name, 0)
         calculated_price = price * confidence

@@ -3,14 +3,15 @@ from PIL import Image
 import os
 import json
 from roboflow import Roboflow
-from utils import fetch_car_data, calculate_damage_estimation
+from utils import fetch_car_data, calculate_damage_estimation, fetch_car_brand_prices
 import time
 import pandas as pd
 from pdf_generator import generate_pdf
 
 def car_damage_detection_page():
-    # st.header("Car Damage Detection")
     st.subheader("Verify car authenticity by entering the car registration number.")
+    
+    # Initialize session state variables
     if 'file_path' not in st.session_state:
         st.session_state.file_path = None
     if 'prediction_json' not in st.session_state:
@@ -18,8 +19,10 @@ def car_damage_detection_page():
     if 'car_data_found' not in st.session_state:
         st.session_state.car_data_found = False
 
+    # Enter car registration number
     car_number = st.text_area("", height=10, key="car_number")
 
+    # Fetch car details based on registration number
     if st.button("Fetch Car Details"):
         if car_number:
             with st.spinner("Fetching car data..."):
@@ -33,12 +36,12 @@ def car_damage_detection_page():
                     st.session_state.car_data_found = True
                     st.session_state.car_details = car_data  # Save car details for later use
 
-    
+    # If car data is found, display it
     if st.session_state.car_data_found:
         st.write("Car Data:")
 
-        # Reorder the columns for display
-        columns_order = ['Registration', 'Car Brand', 'Model',  'Colour', 'Type', 'Fuel', 'Year of Manufacture','Car Price']  # specify the order you want
+        # Display car details in table
+        columns_order = ['Registration', 'Car Brand', 'Model', 'Colour', 'Type', 'Fuel', 'Year of Manufacture', 'Car Price']  # specify the order
         car_data_df = pd.DataFrame([st.session_state.car_details])[columns_order]
 
         car_data_df.rename(columns={'Registration': 'Registration No.'}, inplace=True)
@@ -51,16 +54,10 @@ def car_damage_detection_page():
         
         st.table(car_data_df)
         
-    # if st.session_state.car_data_found:
-    #     st.write("Car Data:")
-
-    #     # Convert car_data dictionary to a pandas DataFrame for tabular display
-    #     car_data_df = pd.DataFrame([st.session_state.car_details])
-    #     st.table(car_data_df)
-
         st.markdown("***")
         st.warning("Upload an image of the car to detect damages and estimate repair costs.")
 
+        # Upload an image of the car
         image_file = st.file_uploader("", type=["jpg", "jpeg", "png"])
         if image_file is not None:
             if not os.path.exists("tempDir"):
@@ -74,6 +71,7 @@ def car_damage_detection_page():
             with col1:
                 st.image(Image.open(file_path), width=400, caption="Uploaded Image")
 
+            # Roboflow setup for damage detection
             rf = Roboflow(api_key="LRvtIEC3Onz66K3Q2C0b")
             project = rf.workspace("automobile-damage-detection").project("automobile-damage-detection")
             model = project.version(1).model
@@ -81,18 +79,33 @@ def car_damage_detection_page():
             confidence_threshold = 20
             overlap_threshold = 20
 
+            # Predict damage using the uploaded image
             with st.spinner("Detecting damage..."):
                 prediction = model.predict(file_path, confidence=confidence_threshold, overlap=overlap_threshold)
                 prediction.save("prediction.jpg")
                 st.session_state.prediction_json = prediction.json()
 
+            # Display the prediction image
             if st.session_state.prediction_json:
                 with col2:
                     st.image("prediction.jpg", width=400, caption="Predicted Image")
 
                 prediction_json = st.session_state.prediction_json
-                total_price, price_details = calculate_damage_estimation(prediction_json)
 
+                # Fetch the damage price data for the car's brand
+                car_brand = st.session_state.car_details.get("Car Brand")
+
+                # Ensure car_brand is a string
+                if isinstance(car_brand, str):
+                    price_mapping = fetch_car_brand_prices(car_brand)
+                else:
+                    st.error(f"Error: Expected 'Car Brand' to be a string, but got {type(car_brand)}")
+                    return
+
+                # Calculate the total price and damage details
+                total_price, price_details = calculate_damage_estimation(prediction_json, price_mapping)
+
+                # Display damage estimation results
                 st.markdown("## Damage Estimations")
 
                 for detail in price_details:
@@ -104,14 +117,17 @@ def car_damage_detection_page():
                         </div>
                     """, unsafe_allow_html=True)
 
+                # Display the total price estimation
                 st.markdown(f"""
                     <div style="background-color: #b9b9c7; padding: 20px; border-radius: 5px; margin-top: 20px;">
                         <h3 style="color: #333; text-align: center;">Total estimated price of repair: ₹  <span style="color: #ff6600;">{total_price:.2f}</span></h3>
                     </div>
                 """, unsafe_allow_html=True)
+                
                 st.markdown("***")
                 col1, col2, col3 = st.columns([1, 1, 1])
 
+                # Provide options to download results
                 with col2:
                     st.download_button(
                         label="Download prediction Results (JSON)",

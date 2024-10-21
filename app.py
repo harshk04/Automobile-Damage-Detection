@@ -9,7 +9,7 @@ from admin_portal import admin_portal
 # Set the page config
 st.set_page_config(page_title="Automobile Damage Detection", layout="wide")
 
-# Check for admin page in query params
+# Check for admin page in query paramss
 query_params = st.query_params
 if 'admin' in query_params:
     admin_portal()
