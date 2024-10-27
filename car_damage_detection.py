@@ -7,9 +7,10 @@ from utils import fetch_car_data, calculate_damage_estimation, fetch_car_brand_p
 import time
 import pandas as pd
 from pdf_generator import generate_pdf
+from numbercheck import extract_text_from_image
 
 def car_damage_detection_page():
-    st.subheader("Verify car authenticity by entering the car registration number.")
+    st.subheader("Verify car authenticity by uploading Car Image")
     
     # Initialize session state variables
     if 'file_path' not in st.session_state:
@@ -18,25 +19,45 @@ def car_damage_detection_page():
         st.session_state.prediction_json = None
     if 'car_data_found' not in st.session_state:
         st.session_state.car_data_found = False
+    if 'car_number' not in st.session_state:
+        st.session_state.car_number = None
 
-    # Enter car registration number
-    car_number = st.text_area("", height=10, key="car_number")
+    # Upload image file for number plate detection
+    File = st.file_uploader(label="Upload Image")
+    if File:
+        # Ensure the images directory exists before saving
+        image_dir = './images'
+        os.makedirs(image_dir, exist_ok=True)  # Create the directory if it doesn't exist
+        image_path = os.path.join(image_dir, File.name)
+        with open(image_path, mode='wb') as w:
+            w.write(File.getvalue())
+        st.session_state.file_path = image_path  # Save path in session state for later use
 
-    # Fetch car details based on registration number
-    if st.button("Fetch Car Details"):
-        if car_number:
-            with st.spinner("Fetching car data..."):
-                car_data = fetch_car_data(car_number)
+        # Display the uploaded image
+        if os.path.exists(image_path):
+            st.success("Image uploaded successfully")
+            st.image(image_path, width=300)
 
-                if car_data is None:
-                    st.error(f"Car with Registration No '{car_number}' not found.")
-                    st.session_state.car_data_found = False
-                else:
-                    st.success("Car data found. You can proceed with damage detection.")
-                    st.session_state.car_data_found = True
-                    st.session_state.car_details = car_data  # Save car details for later use
+        # Combined button to extract text and fetch car details
+        if st.button("Verify Car Authenticity"):
+            with st.spinner("Verifying..."):
+                # Step 1: Extract text from the uploaded image
+                car_number = extract_text_from_image(image_path).strip()  # Strip any extra spaces
+                st.session_state.car_number = car_number  # Save the car number in session state
+                st.subheader(f"Car Number: {car_number}")
+                
+                # Step 2: Fetch car details based on the extracted car number
+                if car_number:
+                    car_data = fetch_car_data(car_number)
+                    if car_data is None:
+                        st.error(f"Car with Registration No '{car_number}' not found.")
+                        st.session_state.car_data_found = False
+                    else:
+                        st.success("Car data found. You can proceed with damage detection.")
+                        st.session_state.car_data_found = True
+                        st.session_state.car_details = car_data  # Save car details for later use
 
-    # If car data is found, display it
+    # Display car details if found
     if st.session_state.car_data_found:
         st.write("Car Data:")
 
@@ -57,7 +78,7 @@ def car_damage_detection_page():
         st.markdown("***")
         st.warning("Upload an image of the car to detect damages and estimate repair costs.")
 
-        # Upload an image of the car
+        # Upload an image of the car for damage detection
         image_file = st.file_uploader("", type=["jpg", "jpeg", "png"])
         if image_file is not None:
             if not os.path.exists("tempDir"):
