@@ -182,7 +182,7 @@ else:
                     login_button = st.form_submit_button("Login")
 
                     if login_button:
-                        if username == "admin" and password == "password":  
+                        if username == "harshk" and password == "test@123":  
                             st.session_state['admin_authenticated'] = True
                             st.session_state['show_admin_login'] = False
                             st.success("Login successful")
