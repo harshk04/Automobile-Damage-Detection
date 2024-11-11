@@ -43,7 +43,7 @@ def delete_files(img_path):
 def extract_text_from_image(img_path):
     sample_file = prep_image(img_path)
     model = genai.GenerativeModel(model_name="gemini-1.5-flash")
-    prompt = "Extract the 'Indian' vehicle number plate from the image and isolate the numerical and alphabetic characters. Remove any extraneous text, symbols, or logos that may be present on the number plate, and give the output in a single line. Remove all spaces and other characters except alphabets and numerics"
+    prompt = "Extract the 'Indian'/'Slovenia' vehicle number plate from the image and isolate the numerical and alphabetic characters. Remove any extraneous text, symbols, or logos that may be present on the number plate, and give the output in a single line. Remove all spaces and other characters except alphabets and numerics"
     response = model.generate_content([sample_file, prompt],
 	safety_settings={
         HarmCategory.HARM_CATEGORY_HATE_SPEECH:HarmBlockThreshold.BLOCK_NONE,

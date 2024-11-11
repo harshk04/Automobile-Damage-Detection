@@ -1,22 +1,8 @@
 import firebase_admin
 from firebase_admin import credentials, firestore
-import streamlit as st
 
-# Initialize Firebase with secrets from Streamlit
 if not firebase_admin._apps:
-    # Load the credentials from st.secrets
-    cred = credentials.Certificate({
-        "type": st.secrets["type"],
-        "project_id": st.secrets["project_id"],
-        "private_key_id": st.secrets["private_key_id"],
-        "private_key": st.secrets["private_key"],
-        "client_email": st.secrets["client_email"],
-        "client_id": st.secrets["client_id"],
-        "auth_uri": st.secrets["auth_uri"],
-        "token_uri": st.secrets["token_uri"],
-        "auth_provider_x509_cert_url": st.secrets["auth_provider_x509_cert_url"],
-        "client_x509_cert_url": st.secrets["client_x509_cert_url"]
-    })
+    cred = credentials.Certificate(r"automobile-damage-detection-firebase-adminsdk-k160e-9e5d21ccf0.json")
     firebase_admin.initialize_app(cred)
 
 db = firestore.client()
@@ -43,21 +29,23 @@ def add_car_data(car_data):
 
 def fetch_car_brand_prices(brand):
     """Fetches price mappings for car parts based on the car's brand from Firestore."""
-    collection_ref = db.collection('damage_prices')
+    collection_ref = db.collection('damage_prices')  # Updated collection name from 'car_brand_prices' to 'damage_prices'
 
     if not isinstance(brand, str):
         raise TypeError(f"Expected 'brand' to be a string, but got {type(brand)}")
     
-    brand = brand.strip()
-    print(f"Fetching prices for brand: {brand}")
+    brand = brand.strip()  # Strip whitespace just in case
+    
+    print(f"Fetching prices for brand: {brand}")  # Debugging line
     
     doc_ref = collection_ref.document(brand)
     doc = doc_ref.get()
 
     if doc.exists:
-        return doc.to_dict().get('damage_prices', {})
+        return doc.to_dict().get('damage_prices', {})  # Ensure we're fetching 'damage_prices'
     else:
         raise ValueError(f"No price data found for brand: {brand}")
+
 
 def calculate_damage_estimation(prediction_json, price_mapping):
     """
