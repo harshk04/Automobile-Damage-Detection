@@ -5,12 +5,16 @@ import time
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
+import streamlit as st
 
 from PIL import ImageOps
 
 #os.environ['api_key']
 #API_KEY = os.environ['api_key']
-genai.configure(api_key='AIzaSyAu3sSka3rSoOHr90YQCweGbAMVd2hBHY8')
+API_KEY = st.secrets["api_key"]
+
+# Configure the Google Generative AI API with the retrieved API key
+genai.configure(api_key=API_KEY)
 
 model_cfg_path = os.path.join('.', 'model', 'cfg', 'darknet-yolov3.cfg')
 model_weights_path = os.path.join('.', 'model', 'weights', 'model.weights')

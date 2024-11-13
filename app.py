@@ -6,7 +6,7 @@ from car_damage_detection import car_damage_detection_page
 from utils import fetch_car_data
 from admin_portal import admin_portal
 
-# Set the page config
+# Set the page configs
 st.set_page_config(page_title="Automobile Damage Detection", layout="wide")
 
 # Check for admin page in query paramss
