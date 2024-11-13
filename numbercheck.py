@@ -10,7 +10,7 @@ from PIL import ImageOps
 
 #os.environ['api_key']
 #API_KEY = os.environ['api_key']
-genai.configure(api_key='AIzaSyDUIkj-lz2Lw8Uhj9mP0AE732mNoYccUtU')
+genai.configure(api_key='AIzaSyAu3sSka3rSoOHr90YQCweGbAMVd2hBHY8')
 
 model_cfg_path = os.path.join('.', 'model', 'cfg', 'darknet-yolov3.cfg')
 model_weights_path = os.path.join('.', 'model', 'weights', 'model.weights')
