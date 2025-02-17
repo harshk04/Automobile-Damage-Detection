@@ -1,6 +1,6 @@
 # Automobile-Damage-Detection
 
-Welcome to the Automobile Damage Detection App! This application allows users to detect damages in cars and estimate repair costs using image processing and machine learning. The app also includes an admin portal for managing car data and monitoring application performance.
+Welcome to the Automobile Damage Detection App! This application allows users to detect damages in cars and estimate repair costs using image processing and machine learning. The app also includes an admin portal for managing car data and monitoring application performance..
 
 ## 📌 Sneak Peek of Main Page 🙈 :
 
