@@ -1,5 +1,3 @@
-
-
 import streamlit as st
 from streamlit_option_menu import option_menu
 from car_damage_detection import car_damage_detection_page
